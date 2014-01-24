@@ -1,16 +1,22 @@
-# Activerecord Todos Part 2 
+# ActiveRecord Todos Part 2 
  
 ##Learning Competencies 
+
+* Use the model-view-controller pattern to organize code and decouple concerns
+* Model relationships in a relational database (one-to-one, one-to-many, many-to-many)
+* Use Active Record Migrations to create a database
+* Use Active Record Queries to query a database
+* Use Active Record to create Associations between database tables
 
 ##Summary 
 
  Now that you have a working TODO app, it's time to exercise your Active Record Associations muscles and add in support for multiple lists.  For example a list for work TODOs , home TODOs, DBC TODOs.
 
-[Here's a skeleton app](http://cl.ly/3u1L1M0B3q3E) that will be helpful, if you didn't use it for the first part of this challenge.
+Copy your `ar_todos` directory from [Active Record Todos Part 1](https://github.com/sea-lions-2014/activerecord-todos-part-1-challenge) into the source directory for this challenge.
 
-## Objectives
+##Releases
 
-### Design the Schema for supporting multiple lists.
+###Release 0 : Design the Schema for supporting multiple lists.
 
 Here are some requirements for multiple lists:
 
@@ -26,21 +32,21 @@ What tables do you need to add / alter in your database to make this work?
 
 **NOTE:** Have a teacher review your design before you go to code.
 
-### Create and run the schema migrations to build your database.
+#### Create and run the schema migrations to build your database.
 
 Can you do this without dumping your data from TODO Part 1?
 Do you need any validations? 
 
-### Populate your database with some initial data 
+#### Populate your database with some initial data 
  
 Use Faker (or another method of your choice) to create some seed data for your lists.
 
-### Update the interface and controller
+#### Update the interface and controller
  
 Add commands to the interface so a user can interact with multiple lists.  Try to make your interface easy and intuitive for a user to interact with.  (ie add a --help command).
 
 
-### Additional Functionality
+###Release 1 : Additional Functionality
 
 Now that we have a working TODO app with multiple lists, let's add three new commands to our TODO app.
 
@@ -105,9 +111,9 @@ $ ruby todo.rb filter:personal
 2. Walk the dog [personal]
 ``` 
 
-##Releases
-###Release 0 
+###Release 3: Testing
+Have you been adding tests as you write your application?  If not here is the chance to add some.  Use the files in the `spec` folder as your guide. 
 
-##Optimize Your Learning 
+<!-- ##Optimize Your Learning  -->
 
 ##Resources
