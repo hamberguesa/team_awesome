@@ -1,5 +1,6 @@
 require_relative '../models/ingredient'
 require 'yummly'
+require 'launchy'
 
 module Model
   def self.all_ingredients
@@ -20,13 +21,17 @@ module Model
   end
 
   def self.get_recipe_names(parsed_recipes)
-    recipes = {}
-    parsed_recipes.each do |recipe|
-      recipes.merge!(recipe["id"] => recipe["recipeName"] )
+    @@recipes = {}
+    parsed_recipes.each_with_index do |recipe, index|
+      @@recipes.merge!(index => [recipe["id"], recipe["recipeName"]] )
     end
-    recipes
+    @@recipes
   end
 
+  def self.fetch_html(number)
+    recipe_id = @@recipes[number.to_i][0]
+    url = "http://www.yummly.com/recipe/#{recipe_id}"
+    result
 end
 
 module Controller
@@ -38,6 +43,7 @@ module Controller
     when 'cook'
       parsed = Model.query(Model.format_search_terms(answer))
       View.display_result_recipes(Model.get_recipe_names(parsed))
+      Model.fetch_html(View.pick_recipe)
     end
   end
 end
@@ -60,12 +66,16 @@ module View
 
   def self.display_result_recipes(recipe_hash)
     puts 'Here is what you can cook!'
-    counter = 1
-    recipe_hash.each_value do |name|
-      puts "#{counter}. #{name}"
-      counter += 1
+    recipe_hash.each do |key, value|
+      puts "#{key}. #{value[1]}"
     end
   end
+
+  def self.pick_recipe
+    puts "Which recipe would you like to cook? Enter its number."
+    choice = gets.chomp
+  end
+
 end
 
 # module Controller
