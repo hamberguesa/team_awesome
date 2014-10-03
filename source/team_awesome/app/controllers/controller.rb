@@ -56,39 +56,59 @@ module Model
         Ingredient.find_by_name(name).destroy
     end
   end
+
+  def self.add_to_cookbook(choice)
+    Recipe.create(url_id: @@recipes[choice][0], name: @@recipes[choice][1])
+  end
 end
 
 module Controller
-  def self.run
+  def self.intro
     View.logo
-    View.spacer
+    View.spacer_top
     View.display_pantry(Model.all_ingredients)
-    View.spacer
+    View.spacer_bottom
+  end
+
+  def self.run
     command = View.options.downcase
     case command
     when 'cook'
       answer = View.get_input(command)
-      View.spacer
+      View.spacer_top
       diet = View.get_diet
-      View.spacer
+      View.spacer_bottom
       View.hacking_the_mainframe
       parsed = Model.query(Model.format_search_terms(answer, diet))
-      View.spacer
+      View.spacer_top
       View.display_result_recipes(Model.get_recipe_names(parsed))
-      View.spacer
-      Model.fetch_html(View.pick_recipe)
+      View.spacer_bottom
+      choice = View.pick_recipe
+      Model.add_to_cookbook(choice)
+      View.save_to_cookbook
+      Model.fetch_html(choice)
+      View.spacer_bottom
+      run
     when 'add'
       answer = View.get_input(command)
-      View.spacer
+      View.spacer_top
       Model.add_ingredient(answer)
       View.add_confirmation(answer)
       View.display_pantry(Model.all_ingredients)
+      run
     when 'delete'
       answer = View.get_input(command)
-      View.spacer
+      View.spacer_top
       Model.delete_ingredient(answer)
       View.delete_confirmation
       View.display_pantry(Model.all_ingredients)
+      run
+    when 'view cookbook'
+      View.spacer_top
+      View.view_cookbook
+      run
+    when 'exit'
+      exit
     end
   end
 end
@@ -99,6 +119,7 @@ module View
     results.each do |object|
       puts "#{object.name.capitalize} - (exp. #{object.expiration_date})".center(159)
     end
+    puts
   end
 
   def self.options
@@ -106,11 +127,21 @@ module View
     puts '* To add an ingredient, type \'add\' *'.center(159)
     puts '* To delete an ingredient, type \'delete\' *'.center(159)
     puts '* To see possible recipes, type \'cook\' *'.center(159)
+    puts '* To see your cookbook, type \'view cookbook\' *'.center(159)
+    puts '* To exit, type \'exit\' *'.center(159)
     puts
     print" "*70
     answer = gets.chomp
     puts
     answer
+  end
+
+  def self.view_cookbook
+    puts 'You currently have the following recipes in your cookbook:'.center(159)
+    Recipe.all.each do |object|
+      puts "#{object.name.capitalize}".center(159)
+    end
+    puts
   end
 
   def self.display_result_recipes(recipe_hash)
@@ -135,9 +166,16 @@ module View
     puts
   end
 
-  def self.spacer
+  def self.spacer_top
+    puts
     spacer = '-'*50
     print spacer.colorize(:light_blue).center(173)
+  end
+
+  def self.spacer_bottom
+    spacer = '-'*50
+    print spacer.colorize(:light_blue).center(173)
+    puts
   end
 
   def self.pick_recipe
@@ -175,6 +213,13 @@ module View
     answer = gets.chomp.split(", ")
     puts
     answer
+  end
+
+  def self.save_to_cookbook
+    puts "Saved to cookbook!".center(159)
+    sleep(0.5)
+    puts "Loading your recipe!".center(159)
+    sleep(0.5)
   end
 
   def self.logo
