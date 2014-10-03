@@ -1,7 +1,7 @@
 require 'rake'
-require 'rspec/core/rake_task'
-
+require 'date'
 require_relative 'config/application'
+require_relative 'app/models/ingredient'
 
 desc "create the database"
 task "db:create" do
@@ -26,7 +26,27 @@ end
 
 desc "populate the test database with sample data"
 task "db:seed" do
-  require APP_ROOT.join('db', 'seeds.rb')
+  Ingredient.create(name: 'onion')
+  Ingredient.create(name: 'apple')
+  Ingredient.create(name: 'carrot')
+  Ingredient.create(name: 'sugar')
+  Ingredient.create(name: 'flour')
+  Ingredient.create(name: 'egg')
+  Ingredient.create(name: 'spinach')
+  Ingredient.create(name: 'quinoa')
+  Ingredient.create(name: 'curry')
+  Ingredient.create(name: 'chicken')
+  Ingredient.create(name: 'sour cream')
+  Ingredient.create(name: 'black beans')
+end
+
+desc "add exp dates to ingredients"
+task "db:add_dates" do
+  Ingredient.all.each do |ingredient|
+    date = Date.today + rand(15)
+    ingredient.expiration_date = date
+    ingredient.save
+  end
 end
 
 desc 'Retrieves the current schema version number'
@@ -39,7 +59,3 @@ task "console" do
   exec "irb -r./config/application"
 end
 
-desc "Run the specs"
-RSpec::Core::RakeTask.new(:spec)
-
-task :default  => :specs

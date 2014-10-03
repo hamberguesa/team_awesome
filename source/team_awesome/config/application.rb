@@ -2,6 +2,8 @@ require 'pathname'
 require 'sqlite3'
 require 'active_record'
 require 'logger'
+require 'yummly'
+
 
 APP_ROOT = Pathname.new(File.expand_path(File.join(File.dirname(__FILE__), '..')))
 
@@ -25,3 +27,9 @@ end
 
 ActiveRecord::Base.establish_connection :adapter  => 'sqlite3',
                                         :database => DB_PATH
+
+Yummly.configure do |config|
+  config.app_id = "0924419f"
+  config.app_key = "08b100236ace02d0e76af0f06890716a"
+  config.use_ssl = false # Default is false
+end
